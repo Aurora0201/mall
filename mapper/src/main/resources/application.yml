@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mall
+    username: root
+    password: root1234
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: top.pi1grim.mall.entity
+  configuration:
+    map-underscore-to-camel-case: true

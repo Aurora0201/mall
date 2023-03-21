@@ -11,6 +11,18 @@
 
     <artifactId>service</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>top.pi1grim</groupId>
+            <artifactId>mapper</artifactId>
+            <version>2.0.1</version>
+        </dependency>
 
+        <dependency>
+            <groupId>top.pi1grim</groupId>
+            <artifactId>common</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+    </dependencies>
 
 </project>

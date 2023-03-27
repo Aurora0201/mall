@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import lombok.Data;
 import lombok.Getter;
@@ -77,10 +78,18 @@ public class Users {
     /**
      * 注册时间 创建时间
      */
-    private LocalDateTime userRegtime;
+    private Date userRegtime;
 
     /**
      * 更新时间 更新时间
      */
-    private LocalDateTime userModtime;
+    private Date userModtime;
+
+    public Users(String username, String password) {
+        this.username = username;
+        this.password = password;
+        userRegtime = new Date();
+        userModtime = new Date();
+        userImg = "/default/img.png";
+    }
 }

@@ -19,9 +19,7 @@ class ApiApplicationTests {
 
 	@Test
 	void query() {
-		QueryWrapper queryWrapper = new QueryWrapper<>(new Users());
-		queryWrapper.eq("username", "aaaa");
-		System.out.println(usersService.getOne(queryWrapper));
+
 	}
 
 	@Test
@@ -34,5 +32,10 @@ class ApiApplicationTests {
 		QueryWrapper queryWrapper = new QueryWrapper<>();
 		queryWrapper.eq("username","tom123123");
 		usersService.remove(queryWrapper);
+	}
+
+	@Test
+	void lambdaTest() {
+
 	}
 }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import top.pi1grim.mall.type.UserStatus;
+import top.pi1grim.mall.util.EnumUtil;
 
 @Data
 @Builder
@@ -15,7 +16,7 @@ public class UserVO {
     private Object data;
 
     public static UserVO getRetVOByCode(int code, Object data) {
-        UserStatus status = UserStatus.getStatusByCode(code);
+        UserStatus status = EnumUtil.getEnumByCode(code, UserStatus.class);
         return builder().code(status.getCode())
                 .msg(status.getMessage())
                 .data(data)

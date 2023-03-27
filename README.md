@@ -76,4 +76,9 @@
 
 ![user_login.drawio](https://cdn.jsdelivr.net/gh/Aurora0201/ImageStore@main/img/upgit_20230321_1679400038.png)
 
-**用户登录**
+**用户登录和用户注册**
+
+使用枚举类储存所有的状态，通过Service层提供的CRUD接口即可完成，两个功能的实现
+
+
+

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import top.pi1grim.mall.dto.User;
 import top.pi1grim.mall.entity.Users;
 import top.pi1grim.mall.service.UsersService;
+import top.pi1grim.mall.util.JwtUtil;
 import top.pi1grim.mall.vo.UserVO;
 
 /**
@@ -28,7 +29,8 @@ public class UsersController {
         int code;
         if(user == null)code = 10;
         else code = user.getPassword().equals(password) ? 20 : 15;
-        return UserVO.getRetVOByCode(code, user);
+        if(code != 20) user = null;
+        return UserVO.getRetVOByCode(code, JwtUtil.getToken(user));
     }
 
     @PostMapping("/register")

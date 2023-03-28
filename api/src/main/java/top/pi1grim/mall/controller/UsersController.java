@@ -8,7 +8,7 @@ import top.pi1grim.mall.dto.User;
 import top.pi1grim.mall.entity.Users;
 import top.pi1grim.mall.service.UsersService;
 import top.pi1grim.mall.util.JwtUtil;
-import top.pi1grim.mall.vo.UserVO;
+import top.pi1grim.mall.vo.ResultVO;
 
 /**
  * <p>
@@ -25,7 +25,7 @@ public class UsersController {
     @Resource
     UsersService usersService;
     @GetMapping("/login")
-    public UserVO login(String username, String password) {
+    public ResultVO login(String username, String password) {
         Users user = usersService.getOne(new QueryWrapper<Users>().eq("username", username));
         int code;
         if(user == null)code = 10;
@@ -35,13 +35,13 @@ public class UsersController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username", user.getUsername());
             jsonObject.put("token", JwtUtil.getToken(user));
-            return UserVO.getRetVOByCode(code, jsonObject);
+            return ResultVO.getRetVOByCode(code, jsonObject);
         }
-        return UserVO.getRetVOByCode(code, null);
+        return ResultVO.getRetVOByCode(code, null);
     }
 
     @PostMapping("/register")
-    public UserVO register(@RequestBody User user) {
+    public ResultVO register(@RequestBody User user) {
         String username = user.getUsername();
         String password = user.getPassword();
         int code = usersService.getOne(new QueryWrapper<Users>().eq("username", username)) != null? 30: 35;
@@ -50,6 +50,6 @@ public class UsersController {
             newUser = new Users(username, password);
             usersService.save(newUser);
         }
-        return UserVO.getRetVOByCode(code, newUser);
+        return ResultVO.getRetVOByCode(code, newUser);
     }
 }

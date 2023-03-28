@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.pi1grim.mall.util.JwtUtil;
-import top.pi1grim.mall.vo.UserVO;
+import top.pi1grim.mall.vo.ResultVO;
 
 import java.io.IOException;
 
@@ -31,7 +31,7 @@ public class CheckTokenInterceptor implements HandlerInterceptor {
             return true;
         } catch (JwtException e) {
             response.setContentType("application/json");
-            response.getWriter().print(JSONObject.toJSON(UserVO.getRetVOByCode(10, null)));
+            response.getWriter().print(JSONObject.toJSON(ResultVO.getRetVOByCode(10, null)));
         }
         return false;
     }

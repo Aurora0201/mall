@@ -1,5 +1,6 @@
 package top.pi1grim.mall.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +30,14 @@ public class UsersController {
         int code;
         if(user == null)code = 10;
         else code = user.getPassword().equals(password) ? 20 : 15;
-        if(code != 20) user = null;
-        return UserVO.getRetVOByCode(code, JwtUtil.getToken(user));
+
+        if(code == 20){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("username", user.getUsername());
+            jsonObject.put("token", JwtUtil.getToken(user));
+            return UserVO.getRetVOByCode(code, jsonObject);
+        }
+        return UserVO.getRetVOByCode(code, null);
     }
 
     @PostMapping("/register")

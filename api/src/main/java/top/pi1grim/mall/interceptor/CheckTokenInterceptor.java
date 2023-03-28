@@ -11,7 +11,7 @@ import top.pi1grim.mall.util.JwtUtil;
 import top.pi1grim.mall.vo.UserVO;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+
 
 @Component
 public class CheckTokenInterceptor implements HandlerInterceptor {
@@ -22,14 +22,13 @@ public class CheckTokenInterceptor implements HandlerInterceptor {
         //校验Token
         String token = request.getHeader("token");
         try {
-            if (token != null) {
-                Jwts.parserBuilder()
-                        .setSigningKey(JwtUtil.KEY)
-                        .build()
-                        .parseClaimsJws(token);
-                //通过了
-                return true;
-            } else throw new JwtException("Token为空");
+            if (token == null)throw new JwtException("Token为空");
+            Jwts.parserBuilder()
+                    .setSigningKey(JwtUtil.KEY)
+                    .build()
+                    .parseClaimsJws(token);
+            //通过了
+            return true;
         } catch (JwtException e) {
             response.setContentType("application/json");
             response.getWriter().print(JSONObject.toJSON(UserVO.getRetVOByCode(10, null)));

@@ -1,7 +1,6 @@
 package top.pi1grim.mall.test;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,8 +8,9 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import top.pi1grim.mall.entity.Users;
-import top.pi1grim.mall.mapper.UsersMapper;
+import top.pi1grim.mall.entity.enhance.CategoryEnhance;
+import top.pi1grim.mall.mapper.CategoryMapper;
+import top.pi1grim.mall.service.IndexImgService;
 import top.pi1grim.mall.service.UsersService;
 import top.pi1grim.mall.type.TokenStatus;
 import top.pi1grim.mall.type.UserStatus;
@@ -18,7 +18,6 @@ import top.pi1grim.mall.util.EnumUtil;
 
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
-import java.security.Key;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,5 +70,20 @@ class ApiApplicationTests {
 	void enumUtilTest() {
 		System.out.println(EnumUtil.getEnumByCode(10, TokenStatus.class));
 		System.out.println(EnumUtil.getEnumByCode(10, UserStatus.class));
+	}
+
+	@Resource
+	IndexImgService indexImgService;
+	@Test
+	void imgTest() {
+		System.out.println(indexImgService.getListOrderByDesc());
+	}
+
+	@Resource
+	private CategoryMapper categoryMapper;
+	@Test
+	void selectTest() {
+		List<CategoryEnhance> categoryEnhances = categoryMapper.selectSubcategory(0);
+		System.out.println(categoryEnhances);
 	}
 }

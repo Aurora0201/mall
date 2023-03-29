@@ -1,7 +1,12 @@
 package top.pi1grim.mall.controller;
 
+import jakarta.annotation.Resource;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
+import top.pi1grim.mall.service.IndexImgService;
+import top.pi1grim.mall.vo.ResultVO;
 
 /**
  * <p>
@@ -11,8 +16,21 @@ import org.springframework.stereotype.Controller;
  * @author Bin JunKai
  * @since 2023-03-22
  */
-@Controller
+@RestController
 @RequestMapping("/indexImg")
+@CrossOrigin
 public class IndexImgController {
+    @Resource
+    private IndexImgService indexImgService;
+    @GetMapping("/banner")
+    public ResultVO banner() {
+//        List<IndexImgDTO> listOrderByDesc = indexImgService.getListOrderByDesc();
+//        System.out.println(listOrderByDesc);
+        return ResultVO.builder()
+                .code(200)
+                .message("获取轮播图成功")
+                .data(indexImgService.getListOrderByDesc())
+                .build();
+    }
 
 }

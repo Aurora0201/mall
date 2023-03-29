@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
-import top.pi1grim.mall.dto.User;
+import top.pi1grim.mall.dto.UserDTO;
 import top.pi1grim.mall.entity.Users;
 import top.pi1grim.mall.service.UsersService;
+import top.pi1grim.mall.type.UserStatus;
 import top.pi1grim.mall.util.JwtUtil;
 import top.pi1grim.mall.vo.ResultVO;
 
@@ -35,13 +36,13 @@ public class UsersController {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username", user.getUsername());
             jsonObject.put("token", JwtUtil.getToken(user));
-            return ResultVO.getRetVOByCode(code, jsonObject);
+            return ResultVO.getRetVOByCode(code, jsonObject, UserStatus.class);
         }
-        return ResultVO.getRetVOByCode(code, null);
+        return ResultVO.getRetVOByCode(code, null, UserStatus.class);
     }
 
     @PostMapping("/register")
-    public ResultVO register(@RequestBody User user) {
+    public ResultVO register(@RequestBody UserDTO user) {
         String username = user.getUsername();
         String password = user.getPassword();
         int code = usersService.getOne(new QueryWrapper<Users>().eq("username", username)) != null? 30: 35;
@@ -50,6 +51,6 @@ public class UsersController {
             newUser = new Users(username, password);
             usersService.save(newUser);
         }
-        return ResultVO.getRetVOByCode(code, newUser);
+        return ResultVO.getRetVOByCode(code, newUser, UserStatus.class);
     }
 }

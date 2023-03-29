@@ -3,8 +3,6 @@ package top.pi1grim.mall.type;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Arrays;
-
 @Getter
 @AllArgsConstructor
 public enum UserStatus implements GenericEnum{

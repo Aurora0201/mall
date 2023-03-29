@@ -2,4 +2,96 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.pi1grim.mall.mapper.CategoryMapper">
 
+
+    <resultMap id="Category" type="top.pi1grim.mall.entity.enhance.CategoryEnhance">
+        <id property="categoryId" column="id1"/>
+        <result property="categoryName" column="name1"/>
+        <result property="categoryLevel" column="level1"/>
+        <result property="parentId" column="parent1"/>
+        <result property="categoryIcon" column="icon1"/>
+        <result property="categorySlogan" column="slogan1"/>
+        <result property="categoryPic" column="pic1"/>
+        <result property="categoryBgColor" column="color1"/>
+        <collection property="subcategory" ofType="top.pi1grim.mall.entity.enhance.CategoryEnhance">
+            <id property="categoryId" column="id2"/>
+            <result property="categoryName" column="name2"/>
+            <result property="categoryLevel" column="level2"/>
+            <result property="parentId" column="parent2"/>
+            <collection property="subcategory" ofType="top.pi1grim.mall.entity.enhance.CategoryEnhance">
+                <id property="categoryId" column="id3"/>
+                <result property="categoryName" column="name3"/>
+                <result property="categoryLevel" column="level3"/>
+                <result property="parentId" column="parent3"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="selectCategory" resultMap="Category">
+        SELECT
+            c1.category_id 'id1',
+            c1.category_name 'name1',
+            c1.category_level 'level1',
+            c1.parent_id 'parent1',
+            c1.category_icon 'icon1',
+            c1.category_slogan 'slogan1',
+            c1.category_pic 'pic1',
+            c1.category_bg_color 'color1',
+            c2.category_id 'id2',
+            c2.category_name 'name2',
+            c2.category_level 'level2',
+            c2.parent_id 'parent2',
+            c2.category_icon 'icon2',
+            c2.category_slogan 'slogan2',
+            c2.category_pic 'pic2',
+            c2.category_bg_color 'color2',
+            c3.category_id 'id3',
+            c3.category_name 'name3',
+            c3.category_level 'level3',
+            c3.parent_id 'parent3',
+            c3.category_icon 'icon3',
+            c3.category_slogan 'slogan3',
+            c3.category_pic 'pic3',
+            c3.category_bg_color 'color3'
+        FROM
+            category c1
+                JOIN
+            category c2
+            ON
+                c2.parent_id = c1.category_id
+                LEFT JOIN
+            category c3
+            ON
+                c3.parent_id = c2.category_id
+        WHERE
+            c1.parent_id = 0
+    </select>
+
+    <resultMap id="subcategory" type="top.pi1grim.mall.entity.enhance.CategoryEnhance">
+        <id property="categoryId" column="category_id"/>
+        <result property="categoryName" column="category_name"/>
+        <result property="categoryLevel" column="category_level"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="categoryIcon" column="category_icon"/>
+        <result property="categorySlogan" column="category_slogan"/>
+        <result property="categoryPic" column="category_pic"/>
+        <result property="categoryBgColor" column="category_bg_color"/>
+        <collection property="subcategory" ofType="top.pi1grim.mall.entity.enhance.CategoryEnhance" select="selectSubcategory" column="category_id"/>
+    </resultMap>
+
+    <select id="selectSubcategory" resultMap="subcategory">
+        SELECT
+            category_id,
+            category_name,
+            category_level,
+            parent_id,
+            category_icon,
+            category_slogan,
+            category_pic,
+            category_bg_color
+        FROM
+            category
+        WHERE
+            parent_id = #{parentId}
+    </select>
+
 </mapper>

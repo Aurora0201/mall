@@ -1,10 +1,15 @@
 package top.pi1grim.mall.service.impl;
 
+import jakarta.annotation.Resource;
 import top.pi1grim.mall.entity.Product;
+import top.pi1grim.mall.entity.enhance.ProductEnhance;
+import top.pi1grim.mall.mapper.ProductImgMapper;
 import top.pi1grim.mall.mapper.ProductMapper;
 import top.pi1grim.mall.service.ProductService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +21,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements ProductService {
+    @Resource
+    ProductMapper productMapper;
 
+    @Override
+    public List<ProductEnhance> productAndImg() {
+        return productMapper.productList();
+    }
 }

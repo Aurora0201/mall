@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.pi1grim.mall.service.IndexImgService;
-import top.pi1grim.mall.vo.ResultVO;
+import top.pi1grim.mall.vo.VO;
 
 /**
  * <p>
@@ -23,10 +23,10 @@ public class IndexImgController {
     @Resource
     private IndexImgService indexImgService;
     @GetMapping("/banner")
-    public ResultVO banner() {
+    public VO banner() {
 //        List<IndexImgDTO> listOrderByDesc = indexImgService.getListOrderByDesc();
 //        System.out.println(listOrderByDesc);
-        return ResultVO.builder()
+        return VO.builder()
                 .code(200)
                 .message("获取轮播图成功")
                 .data(indexImgService.getListOrderByDesc())

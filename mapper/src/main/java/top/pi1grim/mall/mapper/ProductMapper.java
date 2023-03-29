@@ -2,6 +2,9 @@ package top.pi1grim.mall.mapper;
 
 import top.pi1grim.mall.entity.Product;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import top.pi1grim.mall.entity.enhance.ProductEnhance;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2023-03-22
  */
 public interface ProductMapper extends BaseMapper<Product> {
-
+    List<ProductEnhance> productList();
 }

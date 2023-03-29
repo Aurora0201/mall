@@ -2,4 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.pi1grim.mall.mapper.ProductMapper">
 
+    <resultMap id="productList" type="top.pi1grim.mall.entity.enhance.ProductEnhance">
+        <id property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="rootCategoryId" column="root_category_id"/>
+        <result property="soldNum" column="sold_num"/>
+        <result property="productStatus" column="product_status"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <collection property="productImg" ofType="ProductImg" select="top.pi1grim.mall.mapper.ProductImgMapper.selectProductImgById" column="product_id"/>
+    </resultMap>
+    <select id="productList" resultMap="productList">
+        SELECT
+            product_id,
+            product_name,
+            category_id,
+            root_category_id,
+            sold_num,
+            product_status,
+            content,
+            create_time,
+            update_time
+        FROM
+            product
+        ORDER BY
+            create_time
+                DESC
+            LIMIT 3
+    </select>
 </mapper>

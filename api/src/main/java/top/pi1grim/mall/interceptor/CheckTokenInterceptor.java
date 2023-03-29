@@ -8,9 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.pi1grim.mall.type.TokenStatus;
-import top.pi1grim.mall.type.UserStatus;
 import top.pi1grim.mall.util.JwtUtil;
-import top.pi1grim.mall.vo.ResultVO;
+import top.pi1grim.mall.vo.VO;
 
 import java.io.IOException;
 
@@ -34,7 +33,7 @@ public class CheckTokenInterceptor implements HandlerInterceptor {
         } catch (JwtException e) {
             response.setContentType("application/json;charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("interceptor", ResultVO.getRetVOByCode(10, "该请求已被拦截，请检查Token", TokenStatus.class));
+            jsonObject.put("interceptor", VO.getRetVOByCode(10, "该请求已被拦截，请检查Token", TokenStatus.class));
             response.getWriter().print(jsonObject);
         }
         return false;

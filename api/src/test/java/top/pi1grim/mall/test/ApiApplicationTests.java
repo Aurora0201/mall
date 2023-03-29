@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.pi1grim.mall.entity.enhance.CategoryEnhance;
 import top.pi1grim.mall.mapper.CategoryMapper;
+import top.pi1grim.mall.mapper.ProductMapper;
 import top.pi1grim.mall.service.IndexImgService;
 import top.pi1grim.mall.service.UsersService;
 import top.pi1grim.mall.type.TokenStatus;
@@ -86,4 +87,13 @@ class ApiApplicationTests {
 		List<CategoryEnhance> categoryEnhances = categoryMapper.selectSubcategory(0);
 		System.out.println(categoryEnhances);
 	}
+
+	@Resource
+	private ProductMapper productMapper;
+
+	@Test
+	void productTest() {
+		System.out.println(productMapper.productList());
+	}
+
 }

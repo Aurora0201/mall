@@ -4,11 +4,10 @@ import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 import top.pi1grim.mall.service.CategoryService;
 import top.pi1grim.mall.type.CategoryStatus;
-import top.pi1grim.mall.vo.ResultVO;
+import top.pi1grim.mall.vo.VO;
 
 /**
  * <p>
@@ -25,7 +24,7 @@ public class CategoryController {
     @Resource
     CategoryService categoryService;
     @GetMapping("/list")
-    public ResultVO list() {
-        return ResultVO.getRetVOByCode(10, categoryService.categoryList(), CategoryStatus.class);
+    public VO list() {
+        return VO.getRetVOByCode(10, categoryService.categoryList(), CategoryStatus.class);
     }
 }

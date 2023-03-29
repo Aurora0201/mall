@@ -2,6 +2,9 @@ package top.pi1grim.mall.service;
 
 import top.pi1grim.mall.entity.Product;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.pi1grim.mall.entity.enhance.ProductEnhance;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-03-22
  */
 public interface ProductService extends IService<Product> {
-
+    List<ProductEnhance> productAndImg();
 }

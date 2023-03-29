@@ -11,7 +11,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         String[] path = {"/**"};
-        String[] excludePath = {"/users/**", "/indexImg/**", "/category/**", "/swagger-ui/**"};
+        String[] excludePath = {"/users/**", "/indexImg/**", "/category/**", "/swagger-ui/**", "/product/**"};
         registry.addInterceptor(new CheckTokenInterceptor()).addPathPatterns(path).excludePathPatterns(excludePath);
     }
 }

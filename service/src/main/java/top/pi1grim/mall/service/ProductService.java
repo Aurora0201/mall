@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import top.pi1grim.mall.entity.enhance.ProductEnhance;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -16,4 +17,6 @@ import java.util.List;
  */
 public interface ProductService extends IService<Product> {
     List<ProductEnhance> productAndImg();
+
+    Map<String, Object> productDetail(int productId);
 }

@@ -1,11 +1,12 @@
 package top.pi1grim.mall.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import top.pi1grim.mall.entity.ProductParams;
 import top.pi1grim.mall.mapper.ProductMapper;
+import top.pi1grim.mall.service.ProductParamsService;
+import top.pi1grim.mall.service.ProductService;
 import top.pi1grim.mall.type.ProductStatus;
 import top.pi1grim.mall.vo.VO;
 
@@ -22,10 +23,21 @@ import top.pi1grim.mall.vo.VO;
 @CrossOrigin
 public class ProductController {
     @Resource
-    private ProductMapper productMapper;
+    private ProductService productService;
+    @Resource
+    private ProductParamsService productParamsService;
     @GetMapping("/list")
     public VO list() {
-        productMapper.productList();
-        return VO.getRetVOByCode(10, productMapper.productList(), ProductStatus.class);
+        return VO.getRetVOByCode(10, productService.productAndImg(), ProductStatus.class);
+    }
+
+    @GetMapping("/detail/{productId}")
+    public VO detail(@PathVariable int productId) {
+        return VO.getRetVOByCode(20, productService.productDetail(productId), ProductStatus.class);
+    }
+
+    @GetMapping("/param/{productId}")
+    public VO param(@PathVariable int productId) {
+        return VO.getRetVOByCode(25, productParamsService.getOne(new LambdaQueryWrapper<ProductParams>().eq(ProductParams::getProductId, productId)), ProductStatus.class);
     }
 }

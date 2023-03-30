@@ -3,6 +3,7 @@ package top.pi1grim.mall.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import lombok.Data;
 import lombok.Getter;
@@ -70,12 +71,12 @@ public class ProductSku {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 更新时间
      */
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     /**
      * sku状态(1启用，0禁用，-1删除)

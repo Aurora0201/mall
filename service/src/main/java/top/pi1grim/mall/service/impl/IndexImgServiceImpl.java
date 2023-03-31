@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -49,6 +50,7 @@ public class IndexImgServiceImpl extends ServiceImpl<IndexImgMapper, IndexImg> i
                         .imgBgColor(img.getImgBgColor())
                         .build()).toList();
         template.boundValueOps("indexImg").set(JSON.toJSONString(indexImgDTO));
+        template.boundValueOps("indexImg").expire(1, TimeUnit.HOURS);
         return indexImgDTO;
     }
 }

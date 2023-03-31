@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -73,6 +74,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             .build();
         //有就放入Redis中
         template.boundHashOps("product").put(String.valueOf(productId), JSON.toJSONString(productDetail));
+        template.boundHashOps("product").expire(1, TimeUnit.HOURS);
         //返回商品信息
         return productDetail;
     }

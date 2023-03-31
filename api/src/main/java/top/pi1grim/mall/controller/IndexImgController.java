@@ -24,8 +24,6 @@ public class IndexImgController {
     private IndexImgService indexImgService;
     @GetMapping("/banner")
     public VO banner() {
-//        List<IndexImgDTO> listOrderByDesc = indexImgService.getListOrderByDesc();
-//        System.out.println(listOrderByDesc);
         return VO.builder()
                 .code(200)
                 .message("获取轮播图成功")

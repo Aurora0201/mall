@@ -7,4 +7,5 @@ import lombok.Data;
 @Builder
 public class IndexImgDTO {
     private String imgUrl;
+    private String imgBgColor;
 }

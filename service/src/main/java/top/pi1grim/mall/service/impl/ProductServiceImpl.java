@@ -1,11 +1,14 @@
 package top.pi1grim.mall.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import jakarta.annotation.Resource;
 import lombok.Getter;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.pi1grim.mall.dto.ProductDetailDTO;
 import top.pi1grim.mall.entity.Product;
 import top.pi1grim.mall.entity.ProductImg;
 import top.pi1grim.mall.entity.ProductParams;
@@ -43,7 +46,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     private ProductSkuMapper productSkuMapper;
     @Resource
     private ProductParamsMapper productParamsMapper;
-
+    @Resource
+    private StringRedisTemplate template;
 
     @Override
     public List<ProductEnhance> productAndImg() {
@@ -51,16 +55,26 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
-    public Map<String, Object> productDetail(int productId) {
+    public ProductDetailDTO productDetail(int productId) {
+        //先从Redis查询
+        String productInfoString = (String) template.boundHashOps("product").get(String.valueOf(productId));
+        //有就直接返回
+        if(productInfoString != null) return JSON.parseObject(productInfoString, ProductDetailDTO.class);
+        //没有就从数据查询
         Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, productId));
-        if(product == null) return null;
-        Map<String, Object> map = new HashMap<>();
-        map.put("product", product);
-        List<ProductImg> productImg = productImgMapper.selectProductImgById(productId);
-        List<ProductSku> productSkus = productSkuMapper.selectList(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, productId));
-        if(productImg != null) map.put("productImg", productImg);
-        if(productSkus != null) map.put("productSku", productSkus);
-        return map;
+        //如果数据库没有就证明不存在商品
+        if (product == null) {
+            return null;
+        }
+        ProductDetailDTO productDetail = ProductDetailDTO.builder()
+            .product(product)
+            .productImgs(productImgMapper.selectProductImgById(productId))
+            .productSkus(productSkuMapper.selectList(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, productId)))
+            .build();
+        //有就放入Redis中
+        template.boundHashOps("product").put(String.valueOf(productId), JSON.toJSONString(productDetail));
+        //返回商品信息
+        return productDetail;
     }
 
 

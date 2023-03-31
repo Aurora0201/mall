@@ -1,5 +1,6 @@
 package top.pi1grim.mall.test;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -8,10 +9,13 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import top.pi1grim.mall.dto.ProductDetailDTO;
 import top.pi1grim.mall.entity.enhance.CategoryEnhance;
 import top.pi1grim.mall.mapper.CategoryMapper;
 import top.pi1grim.mall.mapper.ProductMapper;
 import top.pi1grim.mall.service.IndexImgService;
+import top.pi1grim.mall.service.ProductService;
 import top.pi1grim.mall.service.UsersService;
 import top.pi1grim.mall.type.TokenStatus;
 import top.pi1grim.mall.type.UserStatus;
@@ -19,7 +23,9 @@ import top.pi1grim.mall.util.EnumUtil;
 
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @SpringBootTest
@@ -90,10 +96,21 @@ class ApiApplicationTests {
 
 	@Resource
 	private ProductMapper productMapper;
-
+	@Resource
+	private ProductService productService;
 	@Test
 	void productTest() {
-		System.out.println(productMapper.productList());
+		productService.productDetail(3);
 	}
+
+	@Resource
+	private StringRedisTemplate template;
+	@Test
+	void redisTest() {
+		String productInfo = (String) template.boundHashOps("product").get(String.valueOf(3));
+//		ProductDetailDTO product = JSON.parseObject(productInfo, ProductDetailDTO.class);
+		System.out.println(productInfo);
+	}
+
 
 }

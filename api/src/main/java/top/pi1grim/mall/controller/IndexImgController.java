@@ -5,8 +5,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pi1grim.mall.dto.IndexImgDTO;
 import top.pi1grim.mall.service.IndexImgService;
+import top.pi1grim.mall.type.IndexImgStatus;
 import top.pi1grim.mall.vo.VO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -24,13 +28,7 @@ public class IndexImgController {
     private IndexImgService indexImgService;
     @GetMapping("/banner")
     public VO banner() {
-//        List<IndexImgDTO> listOrderByDesc = indexImgService.getListOrderByDesc();
-//        System.out.println(listOrderByDesc);
-        return VO.builder()
-                .code(200)
-                .message("获取轮播图成功")
-                .data(indexImgService.getListOrderByDesc())
-                .build();
+        List<IndexImgDTO> indexImg = indexImgService.getListOrderByDesc();
+        return VO.getRetVOByCode(indexImg == null ? 10 : 15, indexImg, IndexImgStatus.class);
     }
-
 }

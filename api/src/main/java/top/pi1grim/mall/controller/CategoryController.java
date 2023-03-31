@@ -5,9 +5,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pi1grim.mall.entity.enhance.CategoryEnhance;
 import top.pi1grim.mall.service.CategoryService;
 import top.pi1grim.mall.type.CategoryStatus;
 import top.pi1grim.mall.vo.VO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -25,6 +28,7 @@ public class CategoryController {
     CategoryService categoryService;
     @GetMapping("/list")
     public VO list() {
-        return VO.getRetVOByCode(10, categoryService.categoryList(), CategoryStatus.class);
+        List<CategoryEnhance> categoryEnhances = categoryService.categoryList();
+        return VO.getRetVOByCode(categoryEnhances == null? 10: 15, categoryEnhances, CategoryStatus.class);
     }
 }

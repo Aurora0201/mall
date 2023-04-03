@@ -1,10 +1,10 @@
-# Shopping Mall Practical Project
+# 商城实战项目
 
-## 1.搭建项目Maven结构
+## 搭建项目Maven结构
 
 ![mall-hierarchy.drawio](https://cdn.jsdelivr.net/gh/Aurora0201/ImageStore@main/img/upgit_20230321_1679374260.png)
 
-## 2.依赖分析
+## 依赖分析
 
 **common**
 
@@ -34,7 +34,7 @@
 + spring-boot-starter-test的依赖
 + 
 
-## 3.软件开发步骤
+## 软件开发步骤
 
 + 问题定义/提出问题
 + 可⾏性分析（技术、成本、法律法规）
@@ -57,15 +57,15 @@
 
 
 
-## 4.导入数据库表
+## 导入数据库表
 
 导入mall.sql文件
 
 
 
-## 5.业务功能设计
+## 业务功能设计
 
-### 1.用户系统
+### 用户系统
 
 用户系统需要有下面的功能
 
@@ -93,7 +93,7 @@
 
 
 
-### 2.首页功能
+### 首页功能
 
 **轮播图的获取**
 
@@ -123,7 +123,7 @@
 
 
 
-### 3.商品系统
+### 商品系统
 
 **详情页面**
 
@@ -146,9 +146,123 @@
 
 
 
-## 6.使用Redis减轻数据库压力
+## 使用JWT实现用户登录验证
 
-### 1.Redis使用场景
+### JWT使用场景
+
+用户在访问首页，商品资源时，无需进行用户验证，但是当用户想要将商品添加到购物车，发布评论时，需要登录账号才能继续操作，这种需要登录才能访问的资源称为受限资源，在前后端分离的项目中我们无法再使用session来存储一个用户登录的信息，这时就轮到JWT登场了
+
+![JWT.drawio](https://cdn.jsdelivr.net/gh/Aurora0201/ImageStore@main/img/upgit_20230403_1680528959.png)
+
+### 使用JWT实现登录验证
+
+先引入依赖，这里选择的是jjwt，在service层中引入
+
+```xml
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.11.5</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.11.5</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+    <version>0.11.5</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
+编写一个Token工具类，用来提供token
+
+```java
+package top.pi1grim.mall.util;
+
+import com.alibaba.fastjson.JSONObject;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import top.pi1grim.mall.entity.Users;
+
+import java.security.Key;
+import java.util.Date;
+
+public class JwtUtil {
+    public static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+    public static String getToken(Users user) {
+        if(user == null) return null;
+
+        return Jwts.builder()
+                .signWith(KEY)
+                .setId(String.valueOf(user.getUserId()))
+                .setIssuer("Bin")
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
+                .setSubject("Login")
+                .compact();
+    }
+}
+```
+
+编写拦截器，对于访问敏感资源的请求进行拦截，token合法则运行访问
+
+```java
+package top.pi1grim.mall.interceptor;
+
+import com.alibaba.fastjson.JSONObject;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+import top.pi1grim.mall.type.TokenStatus;
+import top.pi1grim.mall.util.JwtUtil;
+import top.pi1grim.mall.vo.VO;
+
+import java.io.IOException;
+
+
+@Component
+public class CheckTokenInterceptor implements HandlerInterceptor {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        //跳过OPTIONS
+        if("OPTIONS".equals(request.getMethod()))return true;
+        //校验Token
+        String token = request.getHeader("token");
+        try {
+            if (token == null)throw new JwtException("Token为空");
+            Jwts.parserBuilder()
+                    .setSigningKey(JwtUtil.KEY)
+                    .build()
+                    .parseClaimsJws(token);
+            //通过了
+            return true;
+        } catch (JwtException e) {
+            response.setContentType("application/json;charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("interceptor", VO.getRetVOByCode(10, "该请求已被拦截，请检查Token", TokenStatus.class));
+            response.getWriter().print(jsonObject);
+        }
+        return false;
+    }
+}
+
+```
+
+
+
+
+
+## 使用Redis减轻数据库压力
+
+### Redis使用场景
 
 Redis缓存的数据一般来说有下面的特点：
 
@@ -157,9 +271,9 @@ Redis缓存的数据一般来说有下面的特点：
 
 
 
-### 2.使用Redis缓存数据
+### 使用Redis缓存数据
 
-使用Redis的流程：
+在业务层中使用Redis的流程：
 
 + 首先从Redis中拿
     + 如果有直接返回结果
@@ -168,27 +282,5 @@ Redis缓存的数据一般来说有下面的特点：
     + 如果没有就是不存在所需的数据，返回空
     + 如果有，就存入Redis中，返回结果
 
+![redis-mysql.drawio](https://cdn.jsdelivr.net/gh/Aurora0201/ImageStore@main/img/upgit_20230403_1680529952.png)
 
-
-### 3.缓存击穿
-
-在互联网开发中，高并发的情况下，可能会出现缓存及击穿的情况，**缓存击穿**是指在高并发的场景下，如果存在1000个并发的请求同时访问Redis中不存在的数据，在Spring容器中Service层是单例的，所以会启动1000个进程来访问数据库，这样就会对数据库造成极大的压力，可能会导致系统宕机，解决方法有：
-
-+ 双层检测锁，在访问数据库之前加上**同步锁synchronize**，在访问数据库前再访问一次Redis看看是否已经有了需要的数据
-
-
-
-### 4.缓存穿透
-
-大量的请求访问数据中不存在的数据，首先在Redis中无法命中，最终所有的请求都会访问数据库，让数据库承受巨大的压力，解决方案有：
-
-+ 当数据库查询出一个空数据时，直接往Redis中写入一个非空的数据，**这个非空的数据要设置过期时间比如10s**，这样在10秒内所有的请求都会去查询Redis而不会去查询数据库
-
-
-
-### 5.缓存雪崩
-
-缓存中大量的数据集中过期，导致请求这些数据的大量并发请求会同时访问数据库，解决方案有：
-
-+ 将缓存中的数据设置成不同的过期时间
-+ 在访问洪峰前缓存热点数据，过期时间设置到流量较低的时段
